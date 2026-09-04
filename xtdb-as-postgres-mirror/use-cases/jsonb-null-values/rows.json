@@ -1,0 +1,8 @@
+{
+  "columns": { "id": "bigint", "payload": "jsonb" },
+  "rows": [
+    { "id": 1, "payload": { "a": null, "b": 1 } },
+    { "id": 2, "payload": { "a": null } },
+    { "id": 3, "payload": {} }
+  ]
+}

@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS "uc_double_all_null" (
+    "id" BIGINT PRIMARY KEY,
+    "_id" BIGINT GENERATED ALWAYS AS ("id") STORED,
+    "value" DOUBLE PRECISION
+);
+ALTER TABLE "uc_double_all_null" REPLICA IDENTITY FULL;

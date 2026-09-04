@@ -1,0 +1,25 @@
+server:
+  host: '*'
+  port: 5432
+
+flightSql:
+  host: '*'
+  port: 9832
+
+healthz:
+  host: '*'
+  port: 8080
+
+log: !Local
+  path: '/var/lib/xtdb/log'
+
+storage: !Local
+  path: '/var/lib/xtdb/buffers'
+
+remotes:
+  mirror_pg: !Postgres
+    hostname: postgres
+    port: 5432
+    database: !Env POSTGRES_DB
+    username: !Env POSTGRES_USER
+    password: !Env POSTGRES_PASSWORD

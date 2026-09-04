@@ -1,0 +1,7 @@
+{
+  "columns": { "id": "bigint", "values": "bigint[]" },
+  "rows": [
+    { "id": 1, "values": [1, 2, 3] },
+    { "id": 2, "values": [4, null, 6] }
+  ]
+}

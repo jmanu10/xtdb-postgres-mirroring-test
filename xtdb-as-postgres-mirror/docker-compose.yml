@@ -1,0 +1,62 @@
+name: xtdb-mirror-poc
+
+services:
+  postgres:
+    image: postgres:18.4-alpine
+    container_name: mirror-poc-postgres
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-mirror}
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
+      - -c
+      - max_replication_slots=8
+      - -c
+      - max_wal_senders=4
+      - -c
+      - max_slot_wal_keep_size=8GB
+    ports:
+      - '${POSTGRES_PORT:-6532}:5432'
+    volumes:
+      - volume-postgres:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-mirror} || exit 1']
+      start_period: 10s
+      interval: 15s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+
+  xtdb:
+    image: ghcr.io/xtdb/xtdb:2.2.0-rc1
+    container_name: mirror-poc-xtdb
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - JDK_JAVA_OPTIONS=-Xmx2g
+      - POSTGRES_DB=${POSTGRES_DB:-mirror}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+    command: ['-f', '/etc/xtdb/config.yaml']
+    ports:
+      - '${XTDB_PORT:-6533}:5432'
+      - '${XTDB_HEALTHZ_PORT:-6580}:8080'
+    volumes:
+      - volume-xtdb:/var/lib/xtdb
+      - ./xtdb/config.yaml:/etc/xtdb/config.yaml:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -q -O /dev/null http://localhost:8080/healthz/alive || exit 1']
+      start_period: 90s
+      interval: 15s
+      timeout: 3s
+      retries: 6
+    restart: unless-stopped
+
+volumes:
+  volume-postgres:
+    name: mirror-poc-volume-postgres
+  volume-xtdb:
+    name: mirror-poc-volume-xtdb
