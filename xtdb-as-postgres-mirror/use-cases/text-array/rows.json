@@ -1,0 +1,10 @@
+{
+  "columns": { "id": "bigint", "values": "text[]" },
+  "rows": [
+    { "id": 1, "values": ["hello world", "plain"] },
+    { "id": 2, "values": ["a,b", "c"] },
+    { "id": 3, "values": ["x", null, "NULL"] },
+    { "id": 4, "values": [] },
+    { "id": 5, "values": null }
+  ]
+}

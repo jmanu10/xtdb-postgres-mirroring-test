@@ -1,0 +1,7 @@
+{
+  "columns": { "id": "bigint", "value": "double precision" },
+  "rows": [
+    { "id": 1, "value": null },
+    { "id": 2, "value": null }
+  ]
+}
